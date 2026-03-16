@@ -1,19 +1,19 @@
 // components/ProductCard.tsx
 import Link from "next/link";
 import Image from "next/image";
-import type { WcProduct } from "@/lib/wc";
+import type { WCProduct } from "@/lib/wc";
 
-function firstImage(p: WcProduct) {
+function firstImage(p: WCProduct) {
   const img = p.images?.[0];
   return img?.src ? img : null;
 }
 
-function secondImage(p: WcProduct) {
+function secondImage(p: WCProduct) {
   const img = p.images?.[1];
   return img?.src ? img : null;
 }
 
-function money(product: WcProduct, amount: string) {
+function money(product: WCProduct, amount: string) {
   // Store API shape: prices are minor units (e.g. "7000" for £70.00)
   const p: any = (product as any).prices;
   if (p?.currency_code) {
@@ -38,7 +38,7 @@ function money(product: WcProduct, amount: string) {
   });
 }
 
-function saleInfo(product: WcProduct) {
+function saleInfo(product: WCProduct) {
   const anyP: any = product as any;
 
   // Store API shape
@@ -70,7 +70,7 @@ function saleInfo(product: WcProduct) {
 
   return { onSale, reg, sale, mode: "rest" as const };
 }
-function isNew(product: WcProduct, days = 14) {
+function isNew(product: WCProduct, days = 14) {
   const raw = product.date_created || product.date_created_gmt;
   if (!raw) return false;
 
@@ -80,7 +80,7 @@ function isNew(product: WcProduct, days = 14) {
   const ageDays = (Date.now() - created) / 86400000;
   return ageDays >= 0 && ageDays <= days;
 }
-export default function ProductCard({ product }: { product: WcProduct }) {
+export default function ProductCard({ product }: { product: WCProduct }) {
   const img = firstImage(product);
   const img2 = secondImage(product);
 
