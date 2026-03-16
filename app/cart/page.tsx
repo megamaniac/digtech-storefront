@@ -10,13 +10,6 @@ type CartItemImage = {
   thumbnail?: string;
 };
 
-type CartItemPrices = {
-  currency_code?: string;
-  currency_minor_unit?: number;
-  line_subtotal?: string;
-  line_total?: string;
-};
-
 type CartItem = {
   key: string;
   id: number;
@@ -34,7 +27,7 @@ type CartItem = {
     currency_minor_unit?: number;
   };
   permalink?: string;
-}
+};
 
 type CartResponse = {
   items: CartItem[];
@@ -72,15 +65,28 @@ export default function CartPage() {
       setLoading(true);
       setError(null);
 
+      const cartToken =
+        typeof window !== "undefined"
+          ? localStorage.getItem("woo-cart-token")
+          : null;
+
       const res = await fetch("/wp-json/wc/store/v1/cart", {
         credentials: "include",
         headers: {
           Accept: "application/json",
+          ...(cartToken ? { "Cart-Token": cartToken } : {}),
         },
       });
 
       if (!res.ok) {
         throw new Error(`Cart API ${res.status}`);
+      }
+
+      const nextCartToken =
+        res.headers.get("Cart-Token") || res.headers.get("cart-token");
+
+      if (nextCartToken) {
+        localStorage.setItem("woo-cart-token", nextCartToken);
       }
 
       const data = (await res.json()) as CartResponse;
@@ -151,8 +157,9 @@ export default function CartPage() {
                 "GBP";
 
               const minorUnit =
-                cart.totals?.currency_minor_unit ??
+                item.totals?.currency_minor_unit ??
                 item.prices?.currency_minor_unit ??
+                cart.totals?.currency_minor_unit ??
                 2;
 
               return (

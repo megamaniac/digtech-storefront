@@ -20,11 +20,17 @@ export function AddToCartLink({
     try {
       setLoading(true);
 
-      // Step 1: fetch cart to obtain a valid Nonce header
+      const existingCartToken =
+        typeof window !== "undefined"
+          ? localStorage.getItem("woo-cart-token")
+          : null;
+
+      // 1. bootstrap cart / nonce
       const cartRes = await fetch("/wp-json/wc/store/v1/cart", {
         credentials: "include",
         headers: {
           Accept: "application/json",
+          ...(existingCartToken ? { "Cart-Token": existingCartToken } : {}),
         },
       });
 
@@ -33,14 +39,20 @@ export function AddToCartLink({
       }
 
       const nonce =
-        cartRes.headers.get("Nonce") ||
-        cartRes.headers.get("nonce");
+        cartRes.headers.get("Nonce") || cartRes.headers.get("nonce");
+
+      const bootstrapCartToken =
+        cartRes.headers.get("Cart-Token") || cartRes.headers.get("cart-token");
+
+      if (bootstrapCartToken) {
+        localStorage.setItem("woo-cart-token", bootstrapCartToken);
+      }
 
       if (!nonce) {
         throw new Error("Missing Woo Store API nonce");
       }
 
-      // Step 2: add item to cart
+      // 2. add item
       const addRes = await fetch(
         `/wp-json/wc/store/v1/cart/add-item?id=${encodeURIComponent(
           productId
@@ -51,6 +63,11 @@ export function AddToCartLink({
           headers: {
             Accept: "application/json",
             Nonce: nonce,
+            ...(bootstrapCartToken
+              ? { "Cart-Token": bootstrapCartToken }
+              : existingCartToken
+              ? { "Cart-Token": existingCartToken }
+              : {}),
           },
         }
       );
@@ -60,7 +77,13 @@ export function AddToCartLink({
         throw new Error(`Add-to-cart failed: ${addRes.status} ${text}`);
       }
 
-      // Step 3: go to headless cart page
+      const addCartToken =
+        addRes.headers.get("Cart-Token") || addRes.headers.get("cart-token");
+
+      if (addCartToken) {
+        localStorage.setItem("woo-cart-token", addCartToken);
+      }
+
       router.push("/cart");
       router.refresh();
     } catch (err) {
