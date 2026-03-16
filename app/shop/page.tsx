@@ -1,6 +1,6 @@
 // app/shop/page.tsx
 import type { Metadata } from "next";
-import { wcGetCategories, wcGetProducts, type WcCategory } from "@/lib/wc";
+import { wcGetCategories, wcGetProducts, type WCCategory } from "@/lib/wc";
 import ProductCard from "@/components/ProductCard";
 import Pagination from "@/components/Pagination";
 import ShopToolbar from "@/components/ShopToolbar";
@@ -40,7 +40,7 @@ function sortToQuery(sort: SortKey): { orderby?: any; order?: any } {
   }
 }
 
-function findCategoryId(categories: WcCategory[], slug: string | null) {
+function findCategoryId(categories: WCCategory[], slug: string | null) {
   if (!slug) return undefined;
   const cat = categories.find((c) => c.slug === slug);
   return cat?.id;
