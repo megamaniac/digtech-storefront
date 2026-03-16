@@ -33,6 +33,7 @@ export type WCProduct = {
   short_description?: string;
   stock_status?: string;
   featured?: boolean;
+  sku?: string;
 };
 
 export type WCCategory = {
