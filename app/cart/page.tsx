@@ -59,6 +59,7 @@ export default function CartPage() {
   const [cart, setCart] = useState<CartResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [busyKey, setBusyKey] = useState<string | null>(null);
 
   async function loadCart() {
     try {
@@ -97,7 +98,78 @@ export default function CartPage() {
       setLoading(false);
     }
   }
+async function removeItem(key: string) {
+  try {
+    setBusyKey(key);
+    setError(null);
 
+    const cartToken =
+      typeof window !== "undefined"
+        ? localStorage.getItem("woo-cart-token")
+        : null;
+
+    const cartRes = await fetch("/wp-json/wc/store/v1/cart", {
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        ...(cartToken ? { "Cart-Token": cartToken } : {}),
+      },
+    });
+
+    if (!cartRes.ok) {
+      throw new Error(`Cart bootstrap failed: ${cartRes.status}`);
+    }
+
+    const nonce =
+      cartRes.headers.get("Nonce") || cartRes.headers.get("nonce");
+
+    const nextCartToken =
+      cartRes.headers.get("Cart-Token") || cartRes.headers.get("cart-token");
+
+    if (nextCartToken) {
+      localStorage.setItem("woo-cart-token", nextCartToken);
+    }
+
+    if (!nonce) {
+      throw new Error("Missing Woo Store API nonce");
+    }
+
+    const res = await fetch(
+      `/wp-json/wc/store/v1/cart/remove-item?key=${encodeURIComponent(key)}`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          Nonce: nonce,
+          ...(nextCartToken
+            ? { "Cart-Token": nextCartToken }
+            : cartToken
+            ? { "Cart-Token": cartToken }
+            : {}),
+        },
+      }
+    );
+
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      throw new Error(`Remove item failed: ${res.status} ${text}`);
+    }
+
+    const finalCartToken =
+      res.headers.get("Cart-Token") || res.headers.get("cart-token");
+
+    if (finalCartToken) {
+      localStorage.setItem("woo-cart-token", finalCartToken);
+    }
+
+    await loadCart();
+  } catch (err) {
+    setError(err instanceof Error ? err.message : "Could not remove item");
+  } finally {
+    setBusyKey(null);
+  }
+}
   useEffect(() => {
     loadCart();
   }, []);
@@ -190,14 +262,25 @@ export default function CartPage() {
                       Quantity: {item.quantity}
                     </div>
 
-                    {item.permalink ? (
-                      <a
-                        href={item.permalink}
-                        className="text-xs text-white/60 hover:text-white/90"
+                    <div className="flex items-center gap-3">
+                      {item.permalink ? (
+                        <a
+                          href={item.permalink}
+                          className="text-xs text-white/60 hover:text-white/90"
+                        >
+                          View product →
+                        </a>
+                      ) : null}
+
+                      <button
+                        type="button"
+                        onClick={() => removeItem(item.key)}
+                        disabled={busyKey === item.key}
+                        className="text-xs text-red-300 hover:text-red-200 disabled:opacity-50"
                       >
-                        View product →
-                      </a>
-                    ) : null}
+                        {busyKey === item.key ? "Removing…" : "Remove"}
+                      </button>
+                    </div>
                   </div>
 
                   <div className="text-right text-sm text-white/80">
