@@ -11,8 +11,11 @@ export type WCImage = {
 };
 
 export type WCPrices = {
-  price: string; // minor units, string
+  price: string;
   currency_code: string;
+  currency_minor_unit?: number;
+  regular_price?: string;
+  sale_price?: string;
 };
 
 export type WCProduct = {
