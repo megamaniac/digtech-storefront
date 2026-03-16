@@ -85,7 +85,7 @@ export function AddToCartLink({
       }
 
       window.dispatchEvent(new Event("cart-updated"));
-      router.push("/cart");
+      window.dispatchEvent(new Event("cart-open"));
       router.refresh();
     } catch (err) {
       console.error(err);

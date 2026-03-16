@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { CartCount } from "@/components/CartCount";
+import { MiniCartDrawer } from "@/components/MiniCartDrawer";
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -79,6 +80,7 @@ export function Header() {
           </div>
         </div>
       ) : null}
+      <MiniCartDrawer />
     </header>
   );
 }
