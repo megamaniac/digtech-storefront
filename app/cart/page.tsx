@@ -170,6 +170,85 @@ async function removeItem(key: string) {
     setBusyKey(null);
   }
 }
+async function updateQuantity(key: string, quantity: number) {
+  if (quantity < 1) {
+    await removeItem(key);
+    return;
+  }
+
+  try {
+    setBusyKey(key);
+    setError(null);
+
+    const cartToken =
+      typeof window !== "undefined"
+        ? localStorage.getItem("woo-cart-token")
+        : null;
+
+    const cartRes = await fetch("/wp-json/wc/store/v1/cart", {
+      credentials: "include",
+      headers: {
+        Accept: "application/json",
+        ...(cartToken ? { "Cart-Token": cartToken } : {}),
+      },
+    });
+
+    if (!cartRes.ok) {
+      throw new Error(`Cart bootstrap failed: ${cartRes.status}`);
+    }
+
+    const nonce =
+      cartRes.headers.get("Nonce") || cartRes.headers.get("nonce");
+
+    const nextCartToken =
+      cartRes.headers.get("Cart-Token") || cartRes.headers.get("cart-token");
+
+    if (nextCartToken) {
+      localStorage.setItem("woo-cart-token", nextCartToken);
+    }
+
+    if (!nonce) {
+      throw new Error("Missing Woo Store API nonce");
+    }
+
+    const res = await fetch(
+      `/wp-json/wc/store/v1/cart/update-item?key=${encodeURIComponent(
+        key
+      )}&quantity=${encodeURIComponent(quantity)}`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          Nonce: nonce,
+          ...(nextCartToken
+            ? { "Cart-Token": nextCartToken }
+            : cartToken
+            ? { "Cart-Token": cartToken }
+            : {}),
+        },
+      }
+    );
+
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      throw new Error(`Update quantity failed: ${res.status} ${text}`);
+    }
+
+    const finalCartToken =
+      res.headers.get("Cart-Token") || res.headers.get("cart-token");
+
+    if (finalCartToken) {
+      localStorage.setItem("woo-cart-token", finalCartToken);
+    }
+
+    await loadCart();
+  } catch (err) {
+    setError(err instanceof Error ? err.message : "Could not update quantity");
+  } finally {
+    setBusyKey(null);
+  }
+}
   useEffect(() => {
     loadCart();
   }, []);
@@ -258,8 +337,28 @@ async function removeItem(key: string) {
                       {item.name}
                     </div>
 
-                    <div className="text-xs text-white/50">
-                      Quantity: {item.quantity}
+                    <div className="flex items-center gap-2 text-xs text-white/50">
+                      <span>Quantity:</span>
+
+                      <button
+                        type="button"
+                        onClick={() => updateQuantity(item.key, item.quantity - 1)}
+                        disabled={busyKey === item.key}
+                        className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-white/10 text-white/80 hover:bg-white/[0.06] disabled:opacity-50"
+                      >
+                        −
+                      </button>
+
+                      <span className="min-w-6 text-center text-white/80">{item.quantity}</span>
+
+                      <button
+                        type="button"
+                        onClick={() => updateQuantity(item.key, item.quantity + 1)}
+                        disabled={busyKey === item.key}
+                        className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-white/10 text-white/80 hover:bg-white/[0.06] disabled:opacity-50"
+                      >
+                        +
+                      </button>
                     </div>
 
                     <div className="flex items-center gap-3">
