@@ -34,6 +34,8 @@ export type WCProduct = {
   stock_status?: string;
   featured?: boolean;
   sku?: string;
+  date_created?: string;
+  date_created_gmt?: string;
 };
 
 export type WCCategory = {
