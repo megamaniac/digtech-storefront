@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { CartCount } from "@/components/CartCount";
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -29,12 +30,7 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-          <a
-            href="/cart"
-            className="rounded-lg border border-[rgb(var(--border))] bg-[rgb(var(--surface))] px-5 py-2 text-sm hover:border-white/30"
-          >
-            Cart
-          </a>
+          <CartCount />
           <a
             href="/checkout"
             className="rounded-lg bg-[rgb(var(--accent))] px-3 py-2 text-sm font-semibold text-black hover:opacity-90"
