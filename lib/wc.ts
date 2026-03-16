@@ -23,17 +23,16 @@ export type WCProduct = {
   name: string;
   slug: string;
   images: WCImage[];
-  price_html?: string;
   prices?: WCPrices;
   categories?: {
     id: number;
     name: string;
     slug: string;
-    date_created?: string;
-date_created_gmt?: string;
   }[];
   description?: string;
   short_description?: string;
+  stock_status?: string;
+  featured?: boolean;
 };
 
 export type WCCategory = {
