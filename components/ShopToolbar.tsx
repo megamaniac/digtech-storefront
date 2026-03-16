@@ -3,7 +3,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import type { WcCategory } from "@/lib/wc";
+import type { WCCategory } from "@/lib/wc";
 
 type SortKey = "date" | "price_asc" | "price_desc" | "popularity" | "rating" | "title";
 
@@ -27,7 +27,7 @@ export default function ShopToolbar({
   categories,
   resultCount,
 }: {
-  categories: WcCategory[];
+  categories: WCCategory[];
   resultCount: number;
 }) {
   const router = useRouter();
