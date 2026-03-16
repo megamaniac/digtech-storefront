@@ -30,9 +30,11 @@ type CartItem = {
   totals?: {
     line_subtotal?: string;
     line_total?: string;
+    currency_code?: string;
+    currency_minor_unit?: number;
   };
   permalink?: string;
-};
+}
 
 type CartResponse = {
   items: CartItem[];
