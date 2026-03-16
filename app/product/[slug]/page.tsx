@@ -146,10 +146,10 @@ const isFeatured = product.featured === true;
     return (
       <div className="mt-4 flex items-baseline gap-3">
         <del className="text-white/50">
-          {formatPrice({ price: p.regular_price, currency_code: p.currency_code })}
+          {formatPrice({ price: p.regular_price!, currency_code: p.currency_code })}
         </del>
         <div className="text-2xl font-semibold tracking-tight text-white">
-          {formatPrice({ price: p.sale_price, currency_code: p.currency_code })}
+          {formatPrice({ price: p.sale_price!, currency_code: p.currency_code })}
         </div>
         <div className="text-xs rounded-full bg-[rgb(var(--accent))] px-2 py-1 font-semibold text-black">
           Sale
