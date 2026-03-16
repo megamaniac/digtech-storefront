@@ -132,12 +132,16 @@ export async function listProducts(params?: {
   );
 }
 
-export async function getProductBySlug(slug: string) {
+export async function getProductBySlug(slug: string) { 
   const products = await fetchJson<WCProduct[]>(
     `/products${qs({ slug, per_page: 1 })}`
   );
 
-  return products[0] ?? null;
+  return products?.[0] ?? null;
+}
+
+export async function wcGetProductBySlug(slug: string) {
+  return getProductBySlug(slug);
 }
 
 /* -------------------------
