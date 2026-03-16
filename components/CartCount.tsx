@@ -48,20 +48,23 @@ export function CartCount() {
     }
   }
 
-  useEffect(() => {
-    loadCartCount();
+        useEffect(() => {
+          loadCartCount();
 
-    const onFocus = () => loadCartCount();
-    const onStorage = () => loadCartCount();
+          const onFocus = () => loadCartCount();
+          const onStorage = () => loadCartCount();
+          const onCartUpdate = () => loadCartCount();
 
-    window.addEventListener("focus", onFocus);
-    window.addEventListener("storage", onStorage);
+          window.addEventListener("focus", onFocus);
+          window.addEventListener("storage", onStorage);
+          window.addEventListener("cart-updated", onCartUpdate);
 
-    return () => {
-      window.removeEventListener("focus", onFocus);
-      window.removeEventListener("storage", onStorage);
-    };
-  }, []);
+          return () => {
+            window.removeEventListener("focus", onFocus);
+            window.removeEventListener("storage", onStorage);
+            window.removeEventListener("cart-updated", onCartUpdate);
+          };
+        }, []);
 
   return (
     <Link

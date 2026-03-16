@@ -164,6 +164,7 @@ async function removeItem(key: string) {
     }
 
     await loadCart();
+    window.dispatchEvent(new Event("cart-updated"));
   } catch (err) {
     setError(err instanceof Error ? err.message : "Could not remove item");
   } finally {
@@ -243,6 +244,7 @@ async function updateQuantity(key: string, quantity: number) {
     }
 
     await loadCart();
+    window.dispatchEvent(new Event("cart-updated"));
   } catch (err) {
     setError(err instanceof Error ? err.message : "Could not update quantity");
   } finally {

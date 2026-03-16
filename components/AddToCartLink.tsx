@@ -84,6 +84,7 @@ export function AddToCartLink({
         localStorage.setItem("woo-cart-token", addCartToken);
       }
 
+      window.dispatchEvent(new Event("cart-updated"));
       router.push("/cart");
       router.refresh();
     } catch (err) {
