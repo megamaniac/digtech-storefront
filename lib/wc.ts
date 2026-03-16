@@ -132,21 +132,13 @@ export async function listProducts(params?: {
   );
 }
 
-export async function getProductBySlug(slug: string) { 
+export async function getProductBySlug(slug: string) {
   const products = await fetchJson<WCProduct[]>(
     `/products${qs({ slug, per_page: 1 })}`
   );
 
   return products?.[0] ?? null;
 }
-
-export async function wcGetProductBySlug(slug: string) {
-  return getProductBySlug(slug);
-}
-
-/* -------------------------
-   NEW API (still available)
-------------------------- */
 
 export async function wcGetProducts(params: {
   page?: number;
@@ -158,16 +150,16 @@ export async function wcGetProducts(params: {
   order?: "asc" | "desc";
 }) {
   return fetchRest<WCProduct[]>(
-  `/products${qs({
-    page: params.page,
-    per_page: params.per_page,
-    category: params.categoryId,
-    search: params.search,
-    featured: params.featured ? "true" : undefined,
-    orderby: params.orderby,
-    order: params.order,
-  })}`
-);
+    `/products${qs({
+      page: params.page,
+      per_page: params.per_page,
+      category: params.categoryId,
+      search: params.search,
+      featured: params.featured ? "true" : undefined,
+      orderby: params.orderby,
+      order: params.order,
+    })}`
+  );
 }
 
 export async function wcGetCategories() {
@@ -175,5 +167,5 @@ export async function wcGetCategories() {
 }
 
 export async function wcGetProductBySlug(slug: string) {
-  return restGetProductBySlug(slug);
+  return getProductBySlug(slug);
 }
