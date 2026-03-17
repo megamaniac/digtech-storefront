@@ -49,6 +49,7 @@ export function MiniCartDrawer() {
   const [open, setOpen] = useState(false);
   const [cart, setCart] = useState<CartResponse | null>(null);
   const [loading, setLoading] = useState(false);
+  const [justAdded, setJustAdded] = useState(false);
 
   async function loadCart() {
     try {
@@ -87,7 +88,13 @@ export function MiniCartDrawer() {
     const onOpen = async () => {
       await loadCart();
       setOpen(true);
-    };
+
+      setJustAdded(true);
+
+      window.setTimeout(() => {
+    setJustAdded(false);
+  }, 2200);
+};
 
     const onCartUpdate = async () => {
       await loadCart();
@@ -119,8 +126,12 @@ export function MiniCartDrawer() {
                 <div className="text-base font-semibold text-white/90">
                   Cart
                 </div>
-                <div className="text-sm text-white/60">
-                  Recently added items
+                <div
+                  className={`text-sm transition ${
+                    justAdded ? "text-emerald-300" : "text-white/60"
+                  }`}
+                >
+                  {justAdded ? "Added to cart" : "Recently added items"}
                 </div>
               </div>
 
