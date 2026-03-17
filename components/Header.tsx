@@ -2,8 +2,6 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { CartCount } from "@/components/CartCount";
-import { MiniCartDrawer } from "@/components/MiniCartDrawer";
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -31,14 +29,19 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-          <CartCount />
-          <a
-            href="/checkout"
-            className="rounded-lg bg-[rgb(var(--accent))] px-3 py-2 text-sm font-semibold text-black hover:opacity-90"
-          >
-            Checkout
-          </a>
-        </div>
+            <a
+              href="/cart"
+              className="rounded-lg border border-[rgb(var(--border))] bg-[rgb(var(--surface))] px-5 py-2 text-sm hover:border-white/30"
+            >
+              Cart
+            </a>
+            <a
+              href="/checkout"
+              className="rounded-lg bg-[rgb(var(--accent))] px-3 py-2 text-sm font-semibold text-black hover:opacity-90"
+            >
+              Checkout
+            </a>
+          </div>
 
         {/* Mobile button */}
         <button
@@ -80,7 +83,6 @@ export function Header() {
           </div>
         </div>
       ) : null}
-      <MiniCartDrawer />
     </header>
   );
 }
