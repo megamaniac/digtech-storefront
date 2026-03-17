@@ -9,9 +9,9 @@ export function AddToCartLink({
   quantity?: number;
   className?: string;
 }) {
-  const href = `/cart/?add-to-cart=${encodeURIComponent(productId)}&quantity=${encodeURIComponent(
-    quantity
-  )}`;
+  const href = `https://wp.digtech.uk/cart/?add-to-cart=${encodeURIComponent(
+    productId
+  )}&quantity=${encodeURIComponent(quantity)}`;
 
   return (
     <a

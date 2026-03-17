@@ -29,19 +29,19 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-            <a
-              href="/cart"
-              className="rounded-lg border border-[rgb(var(--border))] bg-[rgb(var(--surface))] px-5 py-2 text-sm hover:border-white/30"
-            >
-              Cart
-            </a>
-            <a
-              href="/checkout"
-              className="rounded-lg bg-[rgb(var(--accent))] px-3 py-2 text-sm font-semibold text-black hover:opacity-90"
-            >
-              Checkout
-            </a>
-          </div>
+          <a
+            href="https://wp.digtech.uk/cart"
+            className="rounded-lg border border-[rgb(var(--border))] bg-[rgb(var(--surface))] px-5 py-2 text-sm hover:border-white/30"
+          >
+            Cart
+          </a>
+          <a
+            href="https://wp.digtech.uk/checkout"
+            className="rounded-lg bg-[rgb(var(--accent))] px-3 py-2 text-sm font-semibold text-black hover:opacity-90"
+          >
+            Checkout
+          </a>
+        </div>
 
         {/* Mobile button */}
         <button
@@ -65,14 +65,14 @@ export function Header() {
               <a className="hover:text-white" href="/contact" onClick={() => setOpen(false)}>Contact us</a>
               <div className="mt-2 flex gap-2">
                 <a
-                  href="/cart"
+                  href="https://wp.digtech.uk/cart"
                   className="flex-1 rounded-lg border border-[rgb(var(--border))] bg-[rgb(var(--surface))] px-3 py-2 text-center text-sm hover:border-white/30"
                   onClick={() => setOpen(false)}
                 >
                   Cart
                 </a>
                 <a
-                  href="/checkout"
+                  href="https://wp.digtech.uk/checkout"
                   className="flex-1 rounded-lg bg-[rgb(var(--accent))] px-3 py-2 text-center text-sm font-semibold text-black hover:opacity-90"
                   onClick={() => setOpen(false)}
                 >
